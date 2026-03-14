@@ -2,7 +2,8 @@
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package*.json ./
-RUN npm ci
+# Use npm install so it works with or without a lockfile
+RUN npm install
 
 # ── builder ───────────────────────────────────────────────────────────────────
 FROM deps AS builder
@@ -16,7 +17,7 @@ ENV NODE_ENV=production
 
 # Production dependencies only
 COPY package*.json ./
-RUN npm ci --omit=dev
+RUN npm install --omit=dev
 
 # Built output
 COPY --from=builder /app/dist ./dist
