@@ -7,6 +7,9 @@ async function bootstrap() {
   // Global prefix — keeps routes clean and consistent
   app.setGlobalPrefix('api/v1');
 
+  // Health endpoint for K8s liveness/readiness probes — excluded from global prefix
+  app.getHttpAdapter().get('/health', (_req, res) => res.status(200).json({ status: 'ok' }));
+
   // Enable CORS for web frontends
   app.enableCors();
 
